@@ -1,0 +1,1 @@
+export const GET_DOCS = 'GET_DOCS'
