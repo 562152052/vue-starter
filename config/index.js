@@ -5,7 +5,6 @@
 const fs = require('fs')
 const path = require('path')
 const utils = require('../build/utils')
-    // import proxyMiddleware from "http-proxy-middleware"
 
 module.exports = {
     dev: {
@@ -16,7 +15,7 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             "/requestIntercept": {
-                target: 'https://carcircle.ucarcloud.cn',
+                target: '',
                 pathRewrite: { '^/requestIntercept': '' },
                 changeOrigin: true
             }
@@ -51,15 +50,17 @@ module.exports = {
                 files.forEach(file => {
                     fs.stat(`${mockdir}/${file}`, (err, stats) => {
                         if (stats.isFile()) {
-                            let mock = require(`${mockdir}/${file}`)
-                            app.use(mock.url, mock.response)
+                            let mocks = require(`${mockdir}/${file}`)
+                            mocks.forEach((val) => {
+                                app.use(val.url, val.response)
+                            })
                         } else {
                             setMock(`${mockdir}/${file}`)
                         }
                     })
                 })
             }
-            setMock(path.resolve(__dirname, '../src/mock'))
+            setMock(path.resolve(__dirname, '../mock'))
         }
     },
 
